@@ -19,7 +19,19 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import User from 'App/Models/User'
+import Hash from '@ioc:Adonis/Core/Hash'
 
 Route.get('/', async ({ inertia }) => {
   return inertia.render('Home')
+})
+
+Route.get('/users', async () => {
+  const user = await User.first();
+  if (user && await Hash.verify(user.password, "123456")) {
+    // verified
+    return user?.name
+  }
+  
+  return User.all();
 })
